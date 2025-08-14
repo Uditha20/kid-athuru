@@ -1,5 +1,5 @@
 fastapi
 uvicorn
 tensorflow
-numpy
 pillow
+numpy  # Updated version for compatibility with TensorFlow 2.19.0
