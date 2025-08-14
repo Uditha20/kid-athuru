@@ -10,7 +10,7 @@ from typing import List
 model = tf.keras.models.load_model("dysgraphia_classifier.h5")
 
 # Manually define the class labels (based on the order in the dataset)
-class_labels = ['low_dysgraphia', 'Potential Dysgraphia', 'no_Dysgraphia']  # Modify if needed
+class_labels = ['low_dysgraphia', 'Potential Dysgraphia', 'no_Dysgraphia']
 
 # FastAPI app setup
 app = FastAPI()
@@ -30,7 +30,7 @@ async def predict(file: UploadFile = File(...)):
     img_array = image.img_to_array(img)  # Convert image to numpy array
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     img_array = img_array / 255.0  # Normalize image
-
+    
     # Make prediction using the model
     prediction = model.predict(img_array)
     
@@ -42,6 +42,14 @@ async def predict(file: UploadFile = File(...)):
         class_name=class_labels[predicted_class],  # Get class label
         probabilities=prediction[0].tolist()  # Return probabilities as list
     )
+
+@app.get("/")
+async def root():
+    return {"message": "Dysgraphia Classifier API is running"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
 if __name__ == "__main__":
     import uvicorn
